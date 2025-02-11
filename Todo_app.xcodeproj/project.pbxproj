@@ -6,6 +6,17 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		5295CB592D4EC9CD00A31CC3 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 5295CB582D4EC9CD00A31CC3 /* SnapKit */; };
+		52C49B532D514E1600E62F4A /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 52C49B522D514E1600E62F4A /* Kingfisher */; };
+		52C49B562D514E7100E62F4A /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 52C49B552D514E7100E62F4A /* Lottie */; };
+		52C49B592D514EF900E62F4A /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 52C49B582D514EF900E62F4A /* IQKeyboardManagerSwift */; };
+		52C49B5C2D514F1500E62F4A /* Pulse in Frameworks */ = {isa = PBXBuildFile; productRef = 52C49B5B2D514F1500E62F4A /* Pulse */; };
+		52C49B5E2D514F1500E62F4A /* PulseProxy in Frameworks */ = {isa = PBXBuildFile; productRef = 52C49B5D2D514F1500E62F4A /* PulseProxy */; };
+		52C49B602D514F1500E62F4A /* PulseUI in Frameworks */ = {isa = PBXBuildFile; productRef = 52C49B5F2D514F1500E62F4A /* PulseUI */; };
+		52C49B672D51538400E62F4A /* FloatingPanel in Frameworks */ = {isa = PBXBuildFile; productRef = 52C49B662D51538400E62F4A /* FloatingPanel */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		5295CB3B2D4EC8E400A31CC3 /* Todo_app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Todo_app.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +47,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				52C49B532D514E1600E62F4A /* Kingfisher in Frameworks */,
+				52C49B672D51538400E62F4A /* FloatingPanel in Frameworks */,
+				52C49B592D514EF900E62F4A /* IQKeyboardManagerSwift in Frameworks */,
+				52C49B5C2D514F1500E62F4A /* Pulse in Frameworks */,
+				52C49B5E2D514F1500E62F4A /* PulseProxy in Frameworks */,
+				52C49B602D514F1500E62F4A /* PulseUI in Frameworks */,
+				5295CB592D4EC9CD00A31CC3 /* SnapKit in Frameworks */,
+				52C49B562D514E7100E62F4A /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +97,14 @@
 			);
 			name = Todo_app;
 			packageProductDependencies = (
+				5295CB582D4EC9CD00A31CC3 /* SnapKit */,
+				52C49B522D514E1600E62F4A /* Kingfisher */,
+				52C49B552D514E7100E62F4A /* Lottie */,
+				52C49B582D514EF900E62F4A /* IQKeyboardManagerSwift */,
+				52C49B5B2D514F1500E62F4A /* Pulse */,
+				52C49B5D2D514F1500E62F4A /* PulseProxy */,
+				52C49B5F2D514F1500E62F4A /* PulseUI */,
+				52C49B662D51538400E62F4A /* FloatingPanel */,
 			);
 			productName = Todo_app;
 			productReference = 5295CB3B2D4EC8E400A31CC3 /* Todo_app.app */;
@@ -107,6 +134,14 @@
 			);
 			mainGroup = 5295CB322D4EC8E400A31CC3;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				5295CB572D4EC9CD00A31CC3 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				52C49B512D514E1600E62F4A /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				52C49B542D514E7100E62F4A /* XCRemoteSwiftPackageReference "lottie-spm" */,
+				52C49B572D514EF900E62F4A /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
+				52C49B5A2D514F1500E62F4A /* XCRemoteSwiftPackageReference "Pulse" */,
+				52C49B652D51538400E62F4A /* XCRemoteSwiftPackageReference "FloatingPanel" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 5295CB3C2D4EC8E400A31CC3 /* Products */;
 			projectDirPath = "";
@@ -333,6 +368,100 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		5295CB572D4EC9CD00A31CC3 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
+		52C49B512D514E1600E62F4A /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.1.4;
+			};
+		};
+		52C49B542D514E7100E62F4A /* XCRemoteSwiftPackageReference "lottie-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-spm.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.5.1;
+			};
+		};
+		52C49B572D514EF900E62F4A /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
+		52C49B5A2D514F1500E62F4A /* XCRemoteSwiftPackageReference "Pulse" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kean/Pulse";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.2;
+			};
+		};
+		52C49B652D51538400E62F4A /* XCRemoteSwiftPackageReference "FloatingPanel" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/scenee/FloatingPanel.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.8.6;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		5295CB582D4EC9CD00A31CC3 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5295CB572D4EC9CD00A31CC3 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		52C49B522D514E1600E62F4A /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 52C49B512D514E1600E62F4A /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+		52C49B552D514E7100E62F4A /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 52C49B542D514E7100E62F4A /* XCRemoteSwiftPackageReference "lottie-spm" */;
+			productName = Lottie;
+		};
+		52C49B582D514EF900E62F4A /* IQKeyboardManagerSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 52C49B572D514EF900E62F4A /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
+			productName = IQKeyboardManagerSwift;
+		};
+		52C49B5B2D514F1500E62F4A /* Pulse */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 52C49B5A2D514F1500E62F4A /* XCRemoteSwiftPackageReference "Pulse" */;
+			productName = Pulse;
+		};
+		52C49B5D2D514F1500E62F4A /* PulseProxy */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 52C49B5A2D514F1500E62F4A /* XCRemoteSwiftPackageReference "Pulse" */;
+			productName = PulseProxy;
+		};
+		52C49B5F2D514F1500E62F4A /* PulseUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 52C49B5A2D514F1500E62F4A /* XCRemoteSwiftPackageReference "Pulse" */;
+			productName = PulseUI;
+		};
+		52C49B662D51538400E62F4A /* FloatingPanel */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 52C49B652D51538400E62F4A /* XCRemoteSwiftPackageReference "FloatingPanel" */;
+			productName = FloatingPanel;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 5295CB332D4EC8E400A31CC3 /* Project object */;
 }
