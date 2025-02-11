@@ -1,5 +1,5 @@
 {
-  "originHash" : "c337572a608f929a2750231f0c2abbe9488cde9fc073f52e4bae3be6ed36cab7",
+  "originHash" : "57bff83d111190cfeff2b4717637bf4325b121d86075cea1cd7edcf8172f102e",
   "pins" : [
     {
       "identity" : "floatingpanel",
@@ -87,8 +87,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/onevcat/Kingfisher.git",
       "state" : {
-        "revision" : "fa3609d1975791c0a6e6f75a56dc20a957967769",
-        "version" : "8.1.4"
+        "revision" : "3db26ab625d194c38e68c1a40e43d1bc12743fe0",
+        "version" : "8.2.0"
       }
     },
     {

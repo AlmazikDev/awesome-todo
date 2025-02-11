@@ -7,14 +7,13 @@
 
 import UIKit
 import SnapKit
+import FloatingPanel
 
 class ViewController: UIViewController {
     
     private var containerView: UIView = {
         let view = UIView()
         view.backgroundColor = .systemBackground
-//        view.layer.borderWidth = 1
-//        view.layer.borderColor = UIColor.lightGray.cgColor
         return view
     }()
   
@@ -40,7 +39,7 @@ class ViewController: UIViewController {
         return label
     }()
     
-    private var addTaskImage: UIImageView = {
+    private lazy var addTaskImage: UIImageView = {
         let image = UIImageView()
         image.image = UIImage(named: "add_task") // add in future realease
         image.contentMode = .scaleAspectFill
@@ -85,6 +84,8 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         
+        navigationController?.navigationBar.isHidden = true
+        
         tableView.dataSource = self
         tableView.register(TaskCell.self, forCellReuseIdentifier: "cell")
         tableView.register(PerformedTaskCell.self, forCellReuseIdentifier: "PerformedTaskCell")
@@ -107,49 +108,51 @@ class ViewController: UIViewController {
         tasksLabel.text = "\(incompletedTaskCount) incomplete, \(completedTaskCount) completed"
         
     }
-
     
     @objc func handleAddTask(sender: UITapGestureRecognizer) {
-        if sender.state == .ended{
-            print("Add task tapped")
-        }
+        let viewController = CreateTaskViewController()
+        let floatingPanel = FloatingPanelController()
+        floatingPanel.backdropView.dismissalTapGestureRecognizer.isEnabled = true
+        floatingPanel.isRemovalInteractionEnabled = true
+        floatingPanel.set(contentViewController: viewController)
+        floatingPanel.surfaceView.grabberHandle.isHidden = true
+        floatingPanel.layout = FloatingPanelIntrinsicLayout()
+        
+        present(floatingPanel, animated: true)
     }
     
     private func configureAddTaskUI() {
         view.addSubview(containerView)
-        containerView.addSubview(labelStackView)
         labelStackView.addArrangedSubview(dateLabel)
         labelStackView.addArrangedSubview(tasksLabel)
-        view.addSubview(addTaskImage)
-        view.addSubview(labelStackView)
+        containerView.addSubview(addTaskImage)
+        containerView.addSubview(labelStackView)
         view.addSubview(tableView)
         
         containerView.snp.makeConstraints { make in
-            make.top.left.right.bottom.equalTo(labelStackView.snp_margins)
+            make.top.equalTo(view.snp.topMargin)
+            make.left.right.equalToSuperview()
         }
         
         labelStackView.snp.makeConstraints{ make in
-            make.top.equalTo(view.safeAreaLayoutGuide)
-            make.left.equalTo(view).offset(16)
-            make.right.equalTo(view).offset(-16)
+            make.top.equalToSuperview().offset(8)
+            make.left.equalToSuperview().inset(16)
+            make.bottom.equalToSuperview().inset(8)
         }
         
         addTaskImage.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(4)
+            make.centerY.equalToSuperview()
             make.right.equalToSuperview().offset(-18)
-            make.width.height.equalTo(56)
+            make.size.equalTo(56)
         }
 
         tableView.snp.makeConstraints{ make in
-            make.top.equalTo(labelStackView.snp.bottom)
-            make.left.equalTo(view).offset(16)
-            make.right.equalTo(view).offset(-16)
-            make.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(containerView.snp.bottom)
+            make.left.equalToSuperview().offset(16)
+            make.right.equalToSuperview().offset(-16)
+            make.bottom.equalTo(view.snp.bottomMargin)
         }
-        
     }
-
-
 }
 
 extension ViewController: UITableViewDataSource {
@@ -186,6 +189,21 @@ extension ViewController: UITableViewDataSource {
         }
         
     }
+}
+
+public final class FloatingPanelIntrinsicLayout: FloatingPanelLayout {
     
-    
+    // MARK: - Public Properties
+
+    public var position: FloatingPanelPosition = .bottom
+
+    public var initialState: FloatingPanelState { .full }
+
+    public var anchors: [FloatingPanelState: FloatingPanelLayoutAnchoring] {
+        [.full: FloatingPanelIntrinsicLayoutAnchor(absoluteOffset: 0, referenceGuide: .safeArea)]
+    }
+
+    // MARK: - Init
+
+    public init() {}
 }
