@@ -6,24 +6,75 @@
 //
 
 import UIKit
+import SnapKit
 
 class CreateCategoryViewController: UIViewController {
-
+    
+    private let categoryLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Add new category"
+        label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        label.textColor = .label
+        return label
+    }()
+    
+    private let categoryTextField: UITextField = {
+        let textField = UITextField()
+        textField.placeholder = "Enter category name"
+        textField.font = UIFont.systemFont(ofSize: 18)
+        textField.textColor = .label
+        textField.borderStyle = .roundedRect
+        return textField
+    }()
+    
+    private let saveCategoryButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("save", for: .normal)
+        button.setTitleColor(.blue, for: .normal)
+        button.addTarget(self, action: #selector(saveCategoryButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        
+        view.backgroundColor = .systemBackground
+        configureAddCategoryUI()
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    private func configureAddCategoryUI() {
+        view.addSubview(categoryLabel)
+        view.addSubview(categoryTextField)
+        view.addSubview(saveCategoryButton)
+        
+        categoryLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(16)
+            make.horizontalEdges.equalToSuperview().inset(16)
+            make.height.equalTo(44)
+        }
+        
+        categoryTextField.snp.makeConstraints { make in
+            make.top.equalTo(categoryLabel.snp.bottom).offset(16)
+            make.horizontalEdges.equalToSuperview().inset(16)
+            make.height.equalTo(44)
+        }
+        
+        saveCategoryButton.snp.makeConstraints { make in
+            make.top.equalTo(categoryTextField.snp.bottom).offset(8)
+            make.horizontalEdges.equalToSuperview().inset(16)
+            make.bottom.equalToSuperview().inset(16)
+//            make.bottom.equalTo(view.snp.bottomMargin)
+            
+        }
+        
     }
-    */
+    
+    
+    @objc private func saveCategoryButtonTapped() {
+        print("Save category button tapped")
+    }
+
+  
 
 }

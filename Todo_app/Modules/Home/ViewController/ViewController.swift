@@ -41,7 +41,7 @@ class ViewController: UIViewController {
     
     private lazy var addTaskImage: UIImageView = {
         let image = UIImageView()
-        image.image = UIImage(named: "add_task") // add in future realease
+        image.image = UIImage(named: "add_task")
         image.contentMode = .scaleAspectFill
         image.isUserInteractionEnabled = true
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleAddTask))

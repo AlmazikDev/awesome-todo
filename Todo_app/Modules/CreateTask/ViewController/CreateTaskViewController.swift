@@ -7,6 +7,7 @@
 
 import UIKit
 import IQKeyboardManagerSwift
+import FloatingPanel
 
 // Enter name
 // Select due date
@@ -84,7 +85,15 @@ class CreateTaskViewController: UIViewController {
     }
     
     @objc private func saveButtonDidTap() {
+        let CategoryVC = CreateCategoryViewController()
+        let floatingPanel = FloatingPanelController()
+        floatingPanel.backdropView.dismissalTapGestureRecognizer.isEnabled = true
+        floatingPanel.isRemovalInteractionEnabled = true
+        floatingPanel.set(contentViewController: CategoryVC)
+        floatingPanel.surfaceView.grabberHandle.isHidden = true
+        floatingPanel.layout = FloatingPanelIntrinsicLayout()
         
+        present(floatingPanel, animated: true)
     }
     
     @objc private func onTapView() {
