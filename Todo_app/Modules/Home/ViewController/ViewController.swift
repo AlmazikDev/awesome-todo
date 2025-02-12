@@ -171,6 +171,18 @@ extension ViewController: UITableViewDataSource {
         
     }
     
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        switch sections[section] {
+            case .incompleted:
+                return "Incomplete"
+            case .completed:
+                return "Completed"
+            default :
+                return ""
+            
+        }
+    }
+    
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let section = sections[indexPath.section]

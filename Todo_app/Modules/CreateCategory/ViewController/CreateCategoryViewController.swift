@@ -73,6 +73,25 @@ class CreateCategoryViewController: UIViewController {
     
     @objc private func saveCategoryButtonTapped() {
         print("Save category button tapped")
+//        let alert = UIAlertController(title: "Category", message: "Create a new category", preferredStyle: .alert)
+//        
+//        alert.addTextField {textField in
+//            textField.placeholder = "Enter category name"
+//            textField.autocapitalizationType = .words
+//            textField.returnKeyType = .go
+//        }
+//        
+//        let saveButton = UIAlertAction(title: "Save", style: .default) { _ in
+//            print("Save button tapped")
+//        }
+//        let cancelButton = UIAlertAction(title: "Cancel", style: .cancel) { _ in
+//            print("Cancel button tapped")
+//        }
+//        
+//        alert.addAction(saveButton)
+//        alert.addAction(cancelButton)
+//        
+//        present(alert, animated: true)
     }
 
   

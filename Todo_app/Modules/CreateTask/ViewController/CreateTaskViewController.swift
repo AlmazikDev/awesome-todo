@@ -85,15 +85,35 @@ class CreateTaskViewController: UIViewController {
     }
     
     @objc private func saveButtonDidTap() {
-        let CategoryVC = CreateCategoryViewController()
-        let floatingPanel = FloatingPanelController()
-        floatingPanel.backdropView.dismissalTapGestureRecognizer.isEnabled = true
-        floatingPanel.isRemovalInteractionEnabled = true
-        floatingPanel.set(contentViewController: CategoryVC)
-        floatingPanel.surfaceView.grabberHandle.isHidden = true
-        floatingPanel.layout = FloatingPanelIntrinsicLayout()
+//        let CategoryVC = CreateCategoryViewController()
+//        let floatingPanel = FloatingPanelController()
+//        floatingPanel.backdropView.dismissalTapGestureRecognizer.isEnabled = true
+//        floatingPanel.isRemovalInteractionEnabled = true
+//        floatingPanel.set(contentViewController: CategoryVC)
+//        floatingPanel.surfaceView.grabberHandle.isHidden = true
+//        floatingPanel.layout = FloatingPanelIntrinsicLayout()
+//        
+//        present(floatingPanel, animated: true)
         
-        present(floatingPanel, animated: true)
+        let alert = UIAlertController(title: "Category", message: "Create a new category", preferredStyle: .alert)
+        
+        alert.addTextField {textField in
+            textField.placeholder = "Enter category name"
+            textField.autocapitalizationType = .words
+            textField.returnKeyType = .go
+        }
+        
+        let saveButton = UIAlertAction(title: "Save", style: .default) { _ in
+            print("Save button tapped")
+        }
+        let cancelButton = UIAlertAction(title: "Cancel", style: .cancel) { _ in
+            print("Cancel button tapped")
+        }
+        
+        alert.addAction(saveButton)
+        alert.addAction(cancelButton)
+        
+        present(alert, animated: true)
     }
     
     @objc private func onTapView() {
