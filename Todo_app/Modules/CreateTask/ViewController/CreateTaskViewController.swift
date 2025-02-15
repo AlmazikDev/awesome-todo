@@ -45,13 +45,14 @@ class CreateTaskViewController: UIViewController {
         return view
     }()
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .systemBackground
         setupSubviews()
         
-        categoryView.setup(categories: ["Category1 Category 2", "2", "Category 3", "Category 4", "Category 1", "Category 2", "Category 3", "Category 4", "Category 1", "Category 2", "Category 3", "Category 4", "Category 1", "Category 2", "Category 3", "Category 4"] + ["+"])
+        categoryView.setup(categories: ["Category1 Category 2", "Category 3", "Category 4", "Category 5", "Category 6"])
     }
     
     private func setupSubviews() {
@@ -85,35 +86,16 @@ class CreateTaskViewController: UIViewController {
     }
     
     @objc private func saveButtonDidTap() {
-//        let CategoryVC = CreateCategoryViewController()
-//        let floatingPanel = FloatingPanelController()
-//        floatingPanel.backdropView.dismissalTapGestureRecognizer.isEnabled = true
-//        floatingPanel.isRemovalInteractionEnabled = true
-//        floatingPanel.set(contentViewController: CategoryVC)
-//        floatingPanel.surfaceView.grabberHandle.isHidden = true
-//        floatingPanel.layout = FloatingPanelIntrinsicLayout()
-//        
-//        present(floatingPanel, animated: true)
+            let CategoryVC = CreateCategoryViewController()
+            let floatingPanel = FloatingPanelController()
+            floatingPanel.backdropView.dismissalTapGestureRecognizer.isEnabled = true
+            floatingPanel.isRemovalInteractionEnabled = true
+            floatingPanel.set(contentViewController: CategoryVC)
+            floatingPanel.surfaceView.grabberHandle.isHidden = true
+            floatingPanel.layout = FloatingPanelIntrinsicLayout()
         
-        let alert = UIAlertController(title: "Category", message: "Create a new category", preferredStyle: .alert)
-        
-        alert.addTextField {textField in
-            textField.placeholder = "Enter category name"
-            textField.autocapitalizationType = .words
-            textField.returnKeyType = .go
-        }
-        
-        let saveButton = UIAlertAction(title: "Save", style: .default) { _ in
-            print("Save button tapped")
-        }
-        let cancelButton = UIAlertAction(title: "Cancel", style: .cancel) { _ in
-            print("Cancel button tapped")
-        }
-        
-        alert.addAction(saveButton)
-        alert.addAction(cancelButton)
-        
-        present(alert, animated: true)
+                present(floatingPanel, animated: true)
+       print("Save category button tapped")
     }
     
     @objc private func onTapView() {
