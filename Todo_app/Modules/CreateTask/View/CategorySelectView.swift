@@ -8,6 +8,10 @@
 import UIKit
 import FloatingPanel
 
+protocol CategorySelectViewDelegate: AnyObject {
+    func addCategoryButtonDidTap()
+}
+
 final class CategorySelectView: UIView {
     private lazy var scrollView: UIScrollView = {
         let view = UIScrollView()
@@ -28,26 +32,11 @@ final class CategorySelectView: UIView {
         let button = UIButton()
         button.setTitle("+", for: .normal)
         button.setTitleColor(.black, for: .normal)
-//        button.layer.cornerRadius = 8
-//        button.layer.borderWidth = 1
         button.addTarget(self, action: #selector(addCategoryButtonDidTap), for: .touchUpInside)
         return button
     }()
     
-//    private lazy var buttonView: UIView = {
-//        let view = UIView()
-//        view.backgroundColor = .systemMint
-//        view.layer.cornerRadius = 8
-//        view.translatesAutoresizingMaskIntoConstraints = false
-//        
-//        let button = UIButton()
-//        button .setTitle("+", for: .normal)
-//        button .setTitleColor(.black, for: .normal)
-////        button .addTarget(self, action: #selector(saveButtonDidTap), for: .touchUpInside)
-//        button.translatesAutoresizingMaskIntoConstraints = false
-//        view.addSubview(button)
-//        return view
-//    }()
+    weak var delegate: CategorySelectViewDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -88,16 +77,7 @@ final class CategorySelectView: UIView {
     }
     
     @objc private func addCategoryButtonDidTap() {
-//        let CategoryVC = CreateCategoryViewController()
-//        let floatingPanel = FloatingPanelController()
-//        floatingPanel.backdropView.dismissalTapGestureRecognizer.isEnabled = true
-//        floatingPanel.isRemovalInteractionEnabled = true
-//        floatingPanel.set(contentViewController: CategoryVC)
-//        floatingPanel.surfaceView.grabberHandle.isHidden = true
-//        floatingPanel.layout = FloatingPanelIntrinsicLayout()
-//        
-//        present(floatingPanel, animated: true)
-        print("Plus button category button tapped")
+        delegate?.addCategoryButtonDidTap()
     }
 }
 

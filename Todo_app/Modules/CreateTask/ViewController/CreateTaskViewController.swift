@@ -44,13 +44,15 @@ class CreateTaskViewController: UIViewController {
         view.addTarget(self, action: #selector(saveButtonDidTap), for: .touchUpInside)
         return view
     }()
-    
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .systemBackground
         setupSubviews()
+        
+        categoryView.delegate = self
         
         categoryView.setup(categories: ["Category1 Category 2", "Category 3", "Category 4", "Category 5", "Category 6"])
     }
@@ -100,5 +102,19 @@ class CreateTaskViewController: UIViewController {
     
     @objc private func onTapView() {
         view.endEditing(true)
+    }
+}
+
+extension CreateTaskViewController: CategorySelectViewDelegate {
+    func addCategoryButtonDidTap() {
+        let categoryViewController = CreateCategoryViewController()
+        let floatingPanel = FloatingPanelController()
+        floatingPanel.backdropView.dismissalTapGestureRecognizer.isEnabled = true
+        floatingPanel.isRemovalInteractionEnabled = true
+        floatingPanel.set(contentViewController: categoryViewController)
+        floatingPanel.surfaceView.grabberHandle.isHidden = true
+        floatingPanel.layout = FloatingPanelIntrinsicLayout()
+        
+        present(floatingPanel, animated: true)
     }
 }
