@@ -44,7 +44,7 @@ class CreateTaskViewController: UIViewController {
         view.addTarget(self, action: #selector(saveButtonDidTap), for: .touchUpInside)
         return view
     }()
-    
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,7 +52,8 @@ class CreateTaskViewController: UIViewController {
         view.backgroundColor = .systemBackground
         setupSubviews()
         
-        categoryView.setup(categories: ["Category1 Category 2", "Category 3", "Category 4", "Category 5", "Category 6"])
+        categoryView.delegate = self
+        fetchCategories()
     }
     
     private func setupSubviews() {
@@ -85,20 +86,37 @@ class CreateTaskViewController: UIViewController {
         }
     }
     
+    private func fetchCategories() {
+        let categories = CoreDataManager.shared.fetchEntities(ofType: Category.self)
+        categoryView.setup(categories: categories)
+    }
+    
     @objc private func saveButtonDidTap() {
-            let CategoryVC = CreateCategoryViewController()
-            let floatingPanel = FloatingPanelController()
-            floatingPanel.backdropView.dismissalTapGestureRecognizer.isEnabled = true
-            floatingPanel.isRemovalInteractionEnabled = true
-            floatingPanel.set(contentViewController: CategoryVC)
-            floatingPanel.surfaceView.grabberHandle.isHidden = true
-            floatingPanel.layout = FloatingPanelIntrinsicLayout()
-        
-                present(floatingPanel, animated: true)
-       print("Save category button tapped")
+        // TODO: Create task in core data, then close this viewcontroller
     }
     
     @objc private func onTapView() {
         view.endEditing(true)
+    }
+}
+
+extension CreateTaskViewController: CategorySelectViewDelegate {
+    func addCategoryButtonDidTap() {
+        let categoryViewController = CreateCategoryViewController()
+        categoryViewController.delegate = self
+        let floatingPanel = FloatingPanelController()
+        floatingPanel.backdropView.dismissalTapGestureRecognizer.isEnabled = true
+        floatingPanel.isRemovalInteractionEnabled = true
+        floatingPanel.set(contentViewController: categoryViewController)
+        floatingPanel.surfaceView.grabberHandle.isHidden = true
+        floatingPanel.layout = FloatingPanelIntrinsicLayout()
+        
+        present(floatingPanel, animated: true)
+    }
+}
+
+extension CreateTaskViewController: CreateCategoryViewControllerDelegate {
+    func categoryDidCreated() {
+        fetchCategories()
     }
 }
