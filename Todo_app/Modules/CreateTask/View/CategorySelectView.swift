@@ -60,14 +60,13 @@ final class CategorySelectView: UIView {
             make.height.equalToSuperview()
             make.width.equalToSuperview().priority(.low)
         }
-        
     }
     
-    func setup(categories: [String]) {
+    func setup(categories: [Category]) {
         stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         for category in categories {
             let label = CategoryLabel()
-            label.text = category
+            label.text = category.name
             label.font = .systemFont(ofSize: 16, weight: .semibold)
             label.layer.borderWidth = 1
             label.layer.cornerRadius = 8

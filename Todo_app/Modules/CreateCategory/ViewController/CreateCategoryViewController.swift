@@ -9,6 +9,10 @@ import UIKit
 import SnapKit
 import FloatingPanel
 
+protocol CreateCategoryViewControllerDelegate: AnyObject {
+    func categoryDidCreated()
+}
+
 class CreateCategoryViewController: UIViewController {
     
     private let categoryLabel: UILabel = {
@@ -36,6 +40,7 @@ class CreateCategoryViewController: UIViewController {
         return button
     }()
     
+    weak var delegate: CreateCategoryViewControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,18 +70,19 @@ class CreateCategoryViewController: UIViewController {
             make.top.equalTo(categoryTextField.snp.bottom).offset(8)
             make.horizontalEdges.equalToSuperview().inset(16)
             make.bottom.equalToSuperview().inset(16)
-//            make.bottom.equalTo(view.snp.bottomMargin)
-            
         }
-        
     }
-    
     
     @objc private func saveCategoryButtonTapped() {
+        guard let name = categoryTextField.text, !name.isEmpty else { return }
+        CoreDataManager.shared.saveCategory(
+            name: name,
+            id: UUID().uuidString,
+            emoji: "",
+            color: ""
+        )
         
-        print("Save category button tapped")
+        dismiss(animated: true)
+        delegate?.categoryDidCreated()
     }
-
-  
-
 }
