@@ -86,16 +86,16 @@ class CreateTaskViewController: UIViewController {
     }
     
     @objc private func saveButtonDidTap() {
-            let CategoryVC = CreateCategoryViewController()
-            let floatingPanel = FloatingPanelController()
-            floatingPanel.backdropView.dismissalTapGestureRecognizer.isEnabled = true
-            floatingPanel.isRemovalInteractionEnabled = true
-            floatingPanel.set(contentViewController: CategoryVC)
-            floatingPanel.surfaceView.grabberHandle.isHidden = true
-            floatingPanel.layout = FloatingPanelIntrinsicLayout()
+        let CategoryVC = CreateCategoryViewController()
+        let floatingPanel = FloatingPanelController()
+        floatingPanel.backdropView.dismissalTapGestureRecognizer.isEnabled = true
+        floatingPanel.isRemovalInteractionEnabled = true
+        floatingPanel.set(contentViewController: CategoryVC)
+        floatingPanel.surfaceView.grabberHandle.isHidden = true
+        floatingPanel.layout = FloatingPanelIntrinsicLayout()
         
-                present(floatingPanel, animated: true)
-       print("Save category button tapped")
+        present(floatingPanel, animated: true)
+        print("Save category button tapped")
     }
     
     @objc private func onTapView() {

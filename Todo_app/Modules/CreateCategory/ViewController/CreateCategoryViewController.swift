@@ -36,6 +36,8 @@ class CreateCategoryViewController: UIViewController {
         return button
     }()
     
+    private var categoryAddView = CategorySelectView()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,10 +75,25 @@ class CreateCategoryViewController: UIViewController {
     
     
     @objc private func saveCategoryButtonTapped() {
+        let newCategory = categoryTextField.text ?? ""
+        categoryAddView.setup(categories: [newCategory])
+        print("Save category button tapped and its text is \(newCategory)")
+        hideKeyboardWhenTappedAround()
         
-        print("Save category button tapped")
     }
 
   
 
+}
+
+extension UIViewController {
+    func hideKeyboardWhenTappedAround() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
 }
