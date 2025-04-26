@@ -64,11 +64,11 @@ class ViewController: UIViewController {
     }()
     
     var incompletedTask: [TaskModel] = [
-        TaskModel(sections: "Incomplete", tasks: "Upload 1099-R to TurboTax", category: "💰 Finance"),
-        TaskModel(sections: "Incomplete", tasks: "Submit 2019 tax return", category: "💰 Finance"),
-        TaskModel(sections: "Incomplete", tasks: "Print parking passes", category: "💞 Wedding"),
-        TaskModel(sections: "Incomplete", tasks: "Sign contract, send back", category: "🖥️ Freelance"),
-        TaskModel(sections: "Incomplete", tasks: "Hand sanitizer", category: "🛒 Shopping List"),
+        TaskModel(sections: "Incomplete", tasks: "Upload 1099-R to TurboTax", category: "💰 Finance", coreDataObject: nil ),
+        TaskModel(sections: "Incomplete", tasks: "Submit 2019 tax return", category: "💰 Finance", coreDataObject: nil),
+        TaskModel(sections: "Incomplete", tasks: "Print parking passes", category: "💞 Wedding", coreDataObject: nil),
+        TaskModel(sections: "Incomplete", tasks: "Sign contract, send back", category: "🖥️ Freelance", coreDataObject: nil),
+        TaskModel(sections: "Incomplete", tasks: "Hand sanitizer", category: "🛒 Shopping List", coreDataObject: nil),
        ]
     
     var completedTask: [CompletedTaskModel] = [
@@ -87,11 +87,13 @@ class ViewController: UIViewController {
         navigationController?.navigationBar.isHidden = true
         
         tableView.dataSource = self
+        tableView.delegate = self
         tableView.register(TaskCell.self, forCellReuseIdentifier: "cell")
         tableView.register(PerformedTaskCell.self, forCellReuseIdentifier: "PerformedTaskCell")
         configureAddTaskUI()
         configureMainLabels()
         configureTaskCountLabels()
+        loadTasksFromCoreData()
     
     }
     
@@ -106,11 +108,60 @@ class ViewController: UIViewController {
         let incompletedTaskCount = incompletedTask.count
         
         tasksLabel.text = "\(incompletedTaskCount) incomplete, \(completedTaskCount) completed"
+    }
+    
+    // MARK: - Loads tasks from Core Data
+    func loadTasksFromCoreData() {
+        let tasks = CoreDataManager.shared.fetchEntities(ofType: Task.self)
         
+        let allTasks = CoreDataManager.shared.fetchEntities(ofType: Task.self)
+        for task in allTasks {
+            print("Task: \(task.name ?? ""), completed: \(task.completed)")
+        }
+        
+        if tasks.isEmpty {
+            insertDefaultTasks()
+            return
+        }
+        
+        incompletedTask = tasks.filter { !$0.completed }.map {
+            TaskModel(sections: "Incompleted", tasks: $0.name ?? "❗️No name", category: "📝 New", coreDataObject: $0)
+        }
+        
+        completedTask = tasks.filter {$0.completed }.map {
+            CompletedTaskModel(task: $0.name ?? "")
+        }
+        
+        sections = [
+            .incompleted(rows: incompletedTask),
+            .completed(completedTask)
+        ]
+        
+        tableView.reloadData()
+        configureTaskCountLabels()
+    }
+    
+    func insertDefaultTasks() {
+        let defaultTasks = [
+            TaskModel(sections: "Incomplete", tasks: "Upload 1099-R to TurboTax", category: "💰 Finance", coreDataObject: nil),
+            TaskModel(sections: "Incomplete", tasks: "Submit 2019 tax return", category: "💰 Finance", coreDataObject: nil),
+            TaskModel(sections: "Incomplete", tasks: "Print parking passes", category: "💞 Wedding", coreDataObject: nil),
+            TaskModel(sections: "Incomplete", tasks: "Sign contract, send back", category: "🖥️ Freelance", coreDataObject: nil),
+            TaskModel(sections: "Incomplete", tasks: "Hand sanitizer", category: "🛒 Shopping List", coreDataObject: nil),
+        ]
+        
+        for task in defaultTasks {
+            CoreDataManager.shared.saveTask(name: task.tasks,
+                                            id: UUID().uuidString,
+                                            dueDate: Date(),
+                                            completed: false)
+        }
+        loadTasksFromCoreData()
     }
     
     @objc func handleAddTask(sender: UITapGestureRecognizer) {
         let viewController = CreateTaskViewController()
+        viewController.delegate = self
         let floatingPanel = FloatingPanelController()
         floatingPanel.backdropView.dismissalTapGestureRecognizer.isEnabled = true
         floatingPanel.isRemovalInteractionEnabled = true
@@ -191,6 +242,21 @@ extension ViewController: UITableViewDataSource {
         case .incompleted(let rows):
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! TaskCell
             cell.configureTask(task: rows[indexPath.row])
+            cell.onCheckBoxTapped = {
+//                print("Task at index \(indexPath) finished")
+                
+                if case .incompleted(let tasks) = self.sections[indexPath.section] {
+                    let task = tasks[indexPath.row]
+                    
+                    if let object = task.coreDataObject {
+                        object.completed = true
+                        try? CoreDataManager.shared.saveContext()
+                    }
+                    self.loadTasksFromCoreData()
+                }
+                
+                
+            }
             return cell
             
         case .completed(let rows):
@@ -201,7 +267,29 @@ extension ViewController: UITableViewDataSource {
         }
         
     }
+    
+    // MARK: - Swipe to delete feature
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+//            print("Swipe to delete row \(indexPath.row)")
+//            var tasks = incompletedTask
+//            tasks.remove(at: indexPath.row)
+//            
+//            tableView.reloadData()
+        }
+    }
+    
 }
+
+    // MARK: - Selecting row in TableView
+extension ViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        print("Item \(indexPath.row) selected")
+    }
+    
+}
+
+
 
 public final class FloatingPanelIntrinsicLayout: FloatingPanelLayout {
     
@@ -219,3 +307,31 @@ public final class FloatingPanelIntrinsicLayout: FloatingPanelLayout {
 
     public init() {}
 }
+
+    // MARK: - Delegate
+extension ViewController: CreateTaskViewControllerDelegate {
+    func saveTaskButtonDidTap(with task: String) {
+        print("Received task before trimming: '\(task)'")
+        
+        let trimmedTask = task.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        print("Received task after trimming: '\(trimmedTask)'")
+        
+        guard !trimmedTask.isEmpty else {
+            print("⚠️ Task name is empty. Not saving.")
+            return
+        }
+        print("Saving task with name: \(trimmedTask)")
+        
+        print("🚀 Calling saveTask with name: \(trimmedTask)")
+        
+        CoreDataManager.shared.saveTask(name: trimmedTask,
+                                        id: UUID().uuidString,
+                                        dueDate: Date(),
+                                        completed: false)
+        loadTasksFromCoreData()
+    }
+    
+    
+}
+

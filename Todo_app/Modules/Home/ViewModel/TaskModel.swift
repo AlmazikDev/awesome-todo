@@ -17,11 +17,13 @@ class TaskModel {
     var sections: String
     var tasks: String
     var category: String
+    var coreDataObject: Task?
     
-    init(sections: String, tasks: String, category: String) {
+    init(sections: String, tasks: String, category: String, coreDataObject: Task?) {
         self.sections = sections
         self.tasks = tasks
         self.category = category
+        self.coreDataObject = coreDataObject
     }
     
 }
