@@ -31,9 +31,11 @@ class TaskModel {
 class CompletedTaskModel {
     
     var task: String
+    var coreDataObject: Task?
     
-    init(task: String) {
+    init(task: String, coreDataObject: Task?) {
         self.task = task
+        self.coreDataObject = coreDataObject
     }
 }
 

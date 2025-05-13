@@ -14,7 +14,7 @@ import FloatingPanel
 // Select category optional
 
 protocol CreateTaskViewControllerDelegate: AnyObject {
-    func saveTaskButtonDidTap(with task: String)
+    func saveTaskButtonDidTap(with task: String, category: Category?)
 }
 
 class CreateTaskViewController: UIViewController {
@@ -52,6 +52,8 @@ class CreateTaskViewController: UIViewController {
     weak var delegate: CreateTaskViewControllerDelegate?
     
     var createdTask : String = ""
+    
+    private var selectedCategory: Category?
 
     
     override func viewDidLoad() {
@@ -107,7 +109,7 @@ class CreateTaskViewController: UIViewController {
                 print("⚠️ Cannot save empty task")
                     return
         }
-        delegate?.saveTaskButtonDidTap(with: text)
+        delegate?.saveTaskButtonDidTap(with: text, category: selectedCategory)
         print("Save button did tap with text:", text)
         dismiss(animated: true)
     }
@@ -118,6 +120,7 @@ class CreateTaskViewController: UIViewController {
 }
 
 extension CreateTaskViewController: CategorySelectViewDelegate {
+   
     func addCategoryButtonDidTap() {
         let categoryViewController = CreateCategoryViewController()
         categoryViewController.delegate = self
@@ -129,6 +132,11 @@ extension CreateTaskViewController: CategorySelectViewDelegate {
         floatingPanel.layout = FloatingPanelIntrinsicLayout()
         
         present(floatingPanel, animated: true)
+    }
+    
+    func categoryDidSelect(_ category: Category) {
+        selectedCategory = category
+        print("Selected category: \(category.name ?? "")")
     }
 }
 

@@ -72,11 +72,11 @@ class ViewController: UIViewController {
        ]
     
     var completedTask: [CompletedTaskModel] = [
-        CompletedTaskModel(task: "Check on FedEx Order"),
-        CompletedTaskModel(task: "Look at new plugins"),
-        CompletedTaskModel(task: "Respond to catering company"),
-        CompletedTaskModel(task: "Reschedule morning coffee"),
-        CompletedTaskModel(task: "Check the latest on Community")
+        CompletedTaskModel(task: "Check on FedEx Order", coreDataObject: nil),
+        CompletedTaskModel(task: "Look at new plugins", coreDataObject: nil),
+        CompletedTaskModel(task: "Respond to catering company", coreDataObject: nil),
+        CompletedTaskModel(task: "Reschedule morning coffee", coreDataObject: nil),
+        CompletedTaskModel(task: "Check the latest on Community", coreDataObject: nil)
     ]
     
     
@@ -93,7 +93,9 @@ class ViewController: UIViewController {
         configureAddTaskUI()
         configureMainLabels()
         configureTaskCountLabels()
+        removeEmptyTasks()
         loadTasksFromCoreData()
+        
     
     }
     
@@ -129,7 +131,7 @@ class ViewController: UIViewController {
         }
         
         completedTask = tasks.filter {$0.completed }.map {
-            CompletedTaskModel(task: $0.name ?? "")
+            CompletedTaskModel(task: $0.name ?? "", coreDataObject: $0)
         }
         
         sections = [
@@ -151,12 +153,42 @@ class ViewController: UIViewController {
         ]
         
         for task in defaultTasks {
+            let categoryName = task.category
+            let category: Category
+            
+            if let existingCategory = CoreDataManager.shared.getCategory(byName: categoryName) {
+                category = existingCategory
+            } else {
+                CoreDataManager.shared.saveCategory(name: categoryName, id: UUID().uuidString, emoji: "", color: "")
+                category = CoreDataManager.shared.getCategory(byName: categoryName)!
+            }
+            
             CoreDataManager.shared.saveTask(name: task.tasks,
                                             id: UUID().uuidString,
                                             dueDate: Date(),
-                                            completed: false)
+                                            completed: false, category: category)
         }
         loadTasksFromCoreData()
+    }
+    
+    func removeEmptyTasks() {
+        let allTasks = CoreDataManager.shared.fetchEntities(ofType: Task.self)
+        
+        let emptyTasks = allTasks.filter { ($0.name ?? "").isEmpty }
+        
+        for task in emptyTasks {
+            CoreDataManager.shared.context.delete(task)
+        }
+        
+        do {
+            try CoreDataManager.shared.saveContext()
+            print("✅ Успешно удалили пустые задачи")
+        } catch {
+            print("⚠️ Ошибка при удалении пустых задач:", error)
+        }
+        
+        loadTasksFromCoreData()
+        
     }
     
     @objc func handleAddTask(sender: UITapGestureRecognizer) {
@@ -243,7 +275,6 @@ extension ViewController: UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! TaskCell
             cell.configureTask(task: rows[indexPath.row])
             cell.onCheckBoxTapped = {
-//                print("Task at index \(indexPath) finished")
                 
                 if case .incompleted(let tasks) = self.sections[indexPath.section] {
                     let task = tasks[indexPath.row]
@@ -271,11 +302,44 @@ extension ViewController: UITableViewDataSource {
     // MARK: - Swipe to delete feature
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-//            print("Swipe to delete row \(indexPath.row)")
-//            var tasks = incompletedTask
-//            tasks.remove(at: indexPath.row)
-//            
-//            tableView.reloadData()
+            print("Swipe to delete row \(indexPath.row)")
+            
+            
+            if case .incompleted(let tasks) = self.sections[indexPath.section] {
+                let taskToDelete = tasks[indexPath.row]
+                
+                if let coreDataObject = taskToDelete.coreDataObject {
+                    CoreDataManager.shared.deleteTask(task: coreDataObject)
+                    
+                    do {
+                        try CoreDataManager.shared.saveContext()
+                        print("✅ Задача успешно удалена")
+                    } catch {
+                        print("⚠️ Ошибка при удалении задачи:", error)
+                    }
+                    
+                    loadTasksFromCoreData()
+                }
+            }
+            
+            if case .completed(let tasks) = self.sections[indexPath.section] {
+                let taskToDelete = tasks[indexPath.row]
+                
+                if let coreDataObject = taskToDelete.coreDataObject {
+                    CoreDataManager.shared.deleteTask(task: coreDataObject)
+                    
+                    do {
+                        try CoreDataManager.shared.saveContext()
+                        print("✅ Задача успешно удалена")
+                    }
+                    catch {
+                        print("⚠️ Ошибка при удалении задачи:", error)
+                    }
+                    
+                    loadTasksFromCoreData()
+                }
+            }
+            
         }
     }
     
@@ -310,7 +374,7 @@ public final class FloatingPanelIntrinsicLayout: FloatingPanelLayout {
 
     // MARK: - Delegate
 extension ViewController: CreateTaskViewControllerDelegate {
-    func saveTaskButtonDidTap(with task: String) {
+    func saveTaskButtonDidTap(with task: String, category: Category?) {
         print("Received task before trimming: '\(task)'")
         
         let trimmedTask = task.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -325,10 +389,16 @@ extension ViewController: CreateTaskViewControllerDelegate {
         
         print("🚀 Calling saveTask with name: \(trimmedTask)")
         
+        guard let category = category else {
+            print("⚠️ Category is not selected. Cannot save task.")
+            return
+        }
+        
         CoreDataManager.shared.saveTask(name: trimmedTask,
                                         id: UUID().uuidString,
                                         dueDate: Date(),
-                                        completed: false)
+                                        completed: false,
+                                        category: category)
         loadTasksFromCoreData()
     }
     
