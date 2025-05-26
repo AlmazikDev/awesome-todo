@@ -16,6 +16,7 @@ class PerformedTaskCell: UITableViewCell {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.image = UIImage(named: "Checked")
+        imageView.isUserInteractionEnabled = true 
         return imageView
     }()
     
@@ -27,9 +28,12 @@ class PerformedTaskCell: UITableViewCell {
         return label
     }()
     
+    var performedTaskCheckboxTapped: (() -> Void)?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(performedCheckboxTapped))
+        checkedImageView.addGestureRecognizer(tapGestureRecognizer)
         
         configurePerformedTaskCellUI()
     }
@@ -59,6 +63,11 @@ class PerformedTaskCell: UITableViewCell {
     
     func configureCompletedTask(task: CompletedTaskModel) {
         performedTaskLabel.text = task.task
+    }
+    
+    @objc func performedCheckboxTapped( _ sender: UITapGestureRecognizer) {
+        print("Performed checkbox was tapped")
+        performedTaskCheckboxTapped?()
     }
     
 }

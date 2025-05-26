@@ -61,39 +61,16 @@ final class CoreDataManager {
     func saveTask(name: String, id: String, dueDate: Date, completed: Bool, category: Category) {
         let task = NSEntityDescription.insertNewObject(forEntityName: "Task", into: context) as! Task
         task.name = name
-        task.id = id
+        task.id = UUID().uuidString
         task.dueDate = dueDate
         task.completed = completed
         task.category = category
-        
-        
-        print("Saving task with name: \(task.name ?? "No name")")
-        
-        do {
-                try saveContext()
-                print("Task saved successfully!")
-            } catch {
-                print("Failed to save task:", error)
-            }
-        
+        saveContext()
     }
     
     
     func deleteTask( task: Task) {
         context.delete(task)
-        
-        do {
-           try context.save()
-        } catch {
-            print("Ошибка при сохранении контекста после удаления: \(error.localizedDescription)")
-        }
-        
     }
     
-    func getCategory(byName name: String) -> Category? {
-        let request: NSFetchRequest<Category> = Category.fetchRequest()
-        request.predicate = NSPredicate(format: "name == %@", name)
-        request.fetchLimit = 1
-        return try? context.fetch(request).first
-    }
 }
