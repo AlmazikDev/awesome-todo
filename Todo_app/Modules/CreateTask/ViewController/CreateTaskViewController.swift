@@ -13,6 +13,10 @@ import FloatingPanel
 // Select due date
 // Select category optional
 
+protocol CreateTaskViewControllerDelegate: AnyObject {
+    func saveTaskButtonDidTap(with task: String, category: Category?)
+}
+
 class CreateTaskViewController: UIViewController {
     
     private let titleLabel: UILabel = {
@@ -44,6 +48,12 @@ class CreateTaskViewController: UIViewController {
         view.addTarget(self, action: #selector(saveButtonDidTap), for: .touchUpInside)
         return view
     }()
+    
+    weak var delegate: CreateTaskViewControllerDelegate?
+    
+    var createdTask : String = ""
+    
+    private var selectedCategory: Category?
 
     
     override func viewDidLoad() {
@@ -53,6 +63,7 @@ class CreateTaskViewController: UIViewController {
         setupSubviews()
         
         categoryView.delegate = self
+        nameTextField.delegate = self
         fetchCategories()
     }
     
@@ -93,6 +104,14 @@ class CreateTaskViewController: UIViewController {
     
     @objc private func saveButtonDidTap() {
         // TODO: Create task in core data, then close this viewcontroller
+        let text = nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        guard !text.isEmpty else {
+                print("⚠️ Cannot save empty task")
+                    return
+        }
+        delegate?.saveTaskButtonDidTap(with: text, category: selectedCategory)
+        print("Save button did tap with text:", text)
+        dismiss(animated: true)
     }
     
     @objc private func onTapView() {
@@ -101,6 +120,7 @@ class CreateTaskViewController: UIViewController {
 }
 
 extension CreateTaskViewController: CategorySelectViewDelegate {
+   
     func addCategoryButtonDidTap() {
         let categoryViewController = CreateCategoryViewController()
         categoryViewController.delegate = self
@@ -113,10 +133,35 @@ extension CreateTaskViewController: CategorySelectViewDelegate {
         
         present(floatingPanel, animated: true)
     }
+    
+    func categoryDidSelect(_ category: Category) {
+        selectedCategory = category
+        print("Selected category: \(category.name ?? "")")
+    }
 }
 
 extension CreateTaskViewController: CreateCategoryViewControllerDelegate {
     func categoryDidCreated() {
         fetchCategories()
+    }
+}
+
+extension CreateTaskViewController: UITextFieldDelegate {
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        let taskName = textField.text ?? ""
+        print("Task text from UITextField: '\(taskName)'")
+        
+        if let value = textField.text?.trimmingCharacters(in: .whitespacesAndNewlines), !value.isEmpty {
+            createdTask = value
+            print("Received task: \(createdTask)")
+        }
+        else {
+            print("⚠️ Task name is empty. Not saving.")
+        }
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true 
     }
 }

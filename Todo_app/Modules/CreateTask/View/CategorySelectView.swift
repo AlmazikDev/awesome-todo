@@ -7,9 +7,11 @@
 
 import UIKit
 import FloatingPanel
+import SnapKit
 
 protocol CategorySelectViewDelegate: AnyObject {
     func addCategoryButtonDidTap()
+    func categoryDidSelect(_ category: Category)
 }
 
 final class CategorySelectView: UIView {
@@ -37,6 +39,8 @@ final class CategorySelectView: UIView {
     }()
     
     weak var delegate: CategorySelectViewDelegate?
+    
+    var category: Category?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -66,10 +70,15 @@ final class CategorySelectView: UIView {
         stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         for category in categories {
             let label = CategoryLabel()
+            label.isUserInteractionEnabled = true
             label.text = category.name
             label.font = .systemFont(ofSize: 16, weight: .semibold)
             label.layer.borderWidth = 1
             label.layer.cornerRadius = 8
+            label.category = category
+            
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(onGenreWasSelected))
+            label.addGestureRecognizer(tapGesture)
             stackView.addArrangedSubview(label)
         }
         stackView.addArrangedSubview(addCategoryButton)
@@ -78,9 +87,17 @@ final class CategorySelectView: UIView {
     @objc private func addCategoryButtonDidTap() {
         delegate?.addCategoryButtonDidTap()
     }
+    
+    @objc private func onGenreWasSelected(sender: UITapGestureRecognizer) {
+        guard let label = sender.view as? CategoryLabel,
+              let category = label.category else { return }
+        delegate?.categoryDidSelect(category)
+    }
 }
 
 class CategoryLabel: UILabel {
+    
+    var category: Category?
     
     init() {
         super.init(frame: .zero)

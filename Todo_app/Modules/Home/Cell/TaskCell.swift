@@ -14,6 +14,7 @@ class TaskCell: UITableViewCell {
         let image = UIImageView()
         image.image = UIImage(named: "checkbox")
         image.contentMode = .scaleAspectFit
+        image.isUserInteractionEnabled = true
         return image
     }()
 
@@ -34,10 +35,13 @@ class TaskCell: UITableViewCell {
         label.setContentHuggingPriority(.defaultHigh, for: .vertical)
         return label
     }()
+    
+    var onCheckBoxTapped: (() -> Void)?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(checkBoxTapped(_:)))
+        checkBoxImage.addGestureRecognizer(tapGestureRecognizer)
         configureCellUI()
     }
     
@@ -71,6 +75,11 @@ class TaskCell: UITableViewCell {
     func configureTask(task: TaskModel) {
         taskLabel.text = task.tasks
         categoryNameLabel.text = task.category
+    }
+    
+    @objc func checkBoxTapped(_ sender: UITapGestureRecognizer) {
+        print("Checkbox was pressed")
+        onCheckBoxTapped?()
     }
         
     
