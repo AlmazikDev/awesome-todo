@@ -103,7 +103,6 @@ class CreateTaskViewController: UIViewController {
     }
     
     @objc private func saveButtonDidTap() {
-        // TODO: Create task in core data, then close this viewcontroller
         let text = nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         guard !text.isEmpty else {
                 print("⚠️ Cannot save empty task")
